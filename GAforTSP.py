@@ -112,8 +112,11 @@ def InitPopulation(data, numOfPopulation=5):
 
 def BestFitnessSelection(data,population,num=5):
     sorted_population = fitnessEvaluationProcedure(data,population)
-    new_population = sorted_population[:num]
-    return new_population
+    if (num < len(sorted_population)):
+         new_population = sorted_population[:num]
+         return new_population
+    else :
+         return sorted_population
 
 def random_parent_crossover(population, new_num= 5):
    size_data = len(population)
@@ -127,16 +130,35 @@ def random_parent_crossover(population, new_num= 5):
 
    return population
 
-def main():
-   data = loadData('TSP_testcase/case_1.txt')
-   population= InitPopulation(data)      
-   for i in range(50):
+def StopCondition(solution, epoch_threshold=10):
+   size_data = len(solution)
+   if (size_data < epoch_threshold):
+      return False
+   best = solution[size_data-1]
+   count = 0
+   for item in solution:
+      if (item == best):
+         count = count + 1
+      if (count > epoch_threshold):
+         return True
+   
+   return False
+
+def main(data_file='TSP_testcase/case_1.txt',epoch=50,num_init_population=5, epoch_threshold= 10, population_size=5):
+   data = loadData(data_file)
+   population= InitPopulation(data, numOfPopulation= num_init_population)     
+   solution = [] 
+   for i in range(epoch):
       print("epoch: ",i)
-      population = random_parent_crossover(population)
-      population = BestFitnessSelection(data,population) 
-      if (i==49):
-         solution = population[0]
-         print("solution: ",solution, ", score: ",fitnessScore(data,solution))
+      population = random_parent_crossover(population,new_num=population_size)
+      population = BestFitnessSelection(data,population, num= population_size) 
+      solution.append(fitnessScore(data,population[0]))
+      if StopCondition(solution,epoch_threshold=epoch_threshold):
+         print("Catch Stop conditions")
+         break
+
+   print("solution: ",population[0], ", score: ",fitnessScore(data,population[0]))      
+
    
 if __name__ == "__main__":
     main()   
