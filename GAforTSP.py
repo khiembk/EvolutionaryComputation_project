@@ -1,4 +1,6 @@
 import random
+import argparse
+
 def loadData(file_path):
     data =[]
     with open(file_path, 'r') as file:
@@ -161,4 +163,9 @@ def main(data_file='TSP_testcase/case_1.txt',epoch=50,num_init_population=5, epo
 
    
 if __name__ == "__main__":
-    main()   
+   parser = argparse.ArgumentParser(description="Args for GA.")
+   parser.add_argument('--data_folder', type=str, default= 'TSP_testcase/case_1.txt', help='folder for test case.')
+   parser.add_argument('--epochs', type=int, default=50, help='Number of epochs for GA')
+
+   args = parser.parse_args() 
+   main(data_file= args.data_folder, epoch=args.epochs)   
