@@ -80,7 +80,12 @@ def meanLehmer(num_list):
         lehmer += num*num
 
     return lehmer/sum_list
-
+def CheckInRange(num, max_num=1,min_num=0):
+    if (num >1): 
+        return 1
+    if (num<0):
+        return 0
+    return num
 def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1, func = First_Dejong_func, min_num = -5.12, max_num = 5.12):
     population = genneratePopulation(population_size=population_size, data_size= data_size, max_num= max_num, min_num= min_num)
     archive_set = []
@@ -105,13 +110,15 @@ def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR
         print("S_F :",S_F)
         if (len(S_CR) > 0) :
            mean_CR = (1-c)*mean_CR + c*sum(S_CR)/len(S_CR)
+           mean_CR = CheckInRange(mean_CR)
         if (len(S_F) >0):    
            mean_F = (1-c)*mean_F + c*meanLehmer(S_F)
+           mean_F = CheckInRange(mean_F)
         print("At epoch: ", epoch)
         print("current mean F: ", mean_F, "cureent main CR: ", mean_CR)
         for index in range(population_size):
             print("population: ",population[index]," func_val:", func(population[index]))
 
 if __name__ == "__main__":
-    main(epochs= 20, genFunc= genSchemeDe, func= Second_Dejong_func, min_num=-2.48, max_num=2.48)
+    main(epochs= 40, genFunc= genSchemeDe, func= Second_Dejong_func, min_num=-2.48, max_num=2.48)
     
