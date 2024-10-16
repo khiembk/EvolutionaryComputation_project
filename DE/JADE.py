@@ -1,13 +1,7 @@
 import random
 import numpy as np
+from Test_func import First_Dejong_func,Second_Dejong_func
 
-def First_Dejong_func(data):
-    data_size = len(data)
-    sum = 0
-    for item in data:
-        sum += item*item
-
-    return sum 
 
 def choose_random_exclude_n0(n, n0, num=3):
     # Create a list of integers from 0 to n-1, excluding n0
@@ -71,10 +65,10 @@ def generateAvector(data_size, min_num = -5.12, max_num = 5.12):
 
     return new_vec
 
-def genneratePopulation(population_size = 10, data_size = 3):
+def genneratePopulation(population_size = 10, data_size = 3, max_num = 5.12, min_num= -5.12):
     population = []
     for index in range (population_size):
-        new_vec = generateAvector(data_size=data_size)
+        new_vec = generateAvector(data_size=data_size, min_num= min_num, max_num= max_num)
         population.append(new_vec)
     
     return population
@@ -87,18 +81,18 @@ def meanLehmer(num_list):
 
     return lehmer/sum_list
 
-def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1):
-    population = genneratePopulation(population_size=population_size, data_size= data_size)
+def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1, func = First_Dejong_func, min_num = -5.12, max_num = 5.12):
+    population = genneratePopulation(population_size=population_size, data_size= data_size, max_num= max_num, min_num= min_num)
     archive_set = []
     for epoch in range(epochs):
         S_CR = []
         S_F = []
 
         for index in range(len(population)):
-            new_vec,S_CR,S_F = genFunc(population= population,archive_set = archive_set, current_index= index, S_CR = S_CR, S_F = S_F, mean_F = mean_F, mean_CR = mean_CR)
+            new_vec,S_CR,S_F = genFunc(population= population,archive_set = archive_set, current_index= index, S_CR = S_CR, S_F = S_F, mean_F = mean_F, mean_CR = mean_CR, func = func)
             if new_vec is not None :
                 x_i = population[index]
-                if First_Dejong_func(new_vec) < First_Dejong_func(population[index]):
+                if func(new_vec) < func(population[index]):
                     population[index] = new_vec
                     if (len(archive_set) < len(population)):
                         archive_set.append(x_i)
@@ -116,7 +110,8 @@ def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR
         print("At epoch: ", epoch)
         print("current mean F: ", mean_F, "cureent main CR: ", mean_CR)
         for index in range(population_size):
-            print("population: ",population[index]," func_val:", First_Dejong_func(population[index]))
+            print("population: ",population[index]," func_val:", func(population[index]))
 
 if __name__ == "__main__":
-    main(epochs= 20, genFunc= genSchemeDe)
+    main(epochs= 20, genFunc= genSchemeDe, func= Second_Dejong_func, min_num=-2.48, max_num=2.48)
+    
