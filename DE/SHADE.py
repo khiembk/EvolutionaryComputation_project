@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from Test_func import First_Dejong_func,Second_Dejong_func
+from Test_func import First_Dejong_func,Second_Dejong_func,Griewangk_func,Third_DeJong_func,fourth_DeJong_func
 from JADE import choose_random_exclude_n0, getBestsample,generateAvector,genneratePopulation,CheckInRange
 
 def Weighted_mean(data, Delta):
