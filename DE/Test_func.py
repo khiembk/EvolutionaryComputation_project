@@ -44,4 +44,5 @@ def Griewangk_func(data):
     for index in range(len(data)):
         sum += 1 + ((data[index])**2)/4000 
         mul = mul*math.cos(data[index]/math.sqrt(index+1))
+        
     return sum + mul
