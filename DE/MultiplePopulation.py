@@ -1,6 +1,6 @@
 import random
 import numpy as np
-from Test_func import First_Dejong_func,Second_Dejong_func,Griewangk_func,Third_DeJong_func,fourth_DeJong_func
+
 from JADE import choose_random_exclude_n0, getBestsample,generateAvector,genneratePopulation,CheckInRange
 
 def main(population_size = 10, epochs = 10, data_size = 3,  genFunc = genSHADE, c = 0.1, func = First_Dejong_func, min_num = -5.12, max_num = 5.12, History_size = 5):
