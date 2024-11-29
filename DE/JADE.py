@@ -1,6 +1,7 @@
 import random
 import numpy as np
 from Test_func import First_Dejong_func,Second_Dejong_func
+from CEC2013 import BenchmarkFunctions
 
 
 def choose_random_exclude_n0(n, n0, num=3):
@@ -86,7 +87,7 @@ def CheckInRange(num, max_num=1,min_num=0):
     if (num<0):
         return 0
     return num
-def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1, func = First_Dejong_func, min_num = -5.12, max_num = 5.12):
+def JADE(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1, func = First_Dejong_func, min_num = -5.12, max_num = 5.12):
     population = genneratePopulation(population_size=population_size, data_size= data_size, max_num= max_num, min_num= min_num)
     archive_set = []
     for epoch in range(epochs):
@@ -118,7 +119,12 @@ def main(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR
         print("current mean F: ", mean_F, "cureent main CR: ", mean_CR)
         for index in range(population_size):
             print("population: ",population[index]," func_val:", func(population[index]))
+        x_best = getBestsample(population= population, p=0, func  = func)    
+        print("Best value: ", func(x_best))
+        return x_best 
 
 if __name__ == "__main__":
-    main(epochs= 40, genFunc= genSchemeDe, func= Second_Dejong_func, min_num=-2.48, max_num=2.48)
+    ben = BenchmarkFunctions(dimension= 10)
+    func1 = ben.get_function(func_num = 1)
+    JADE(epochs= 100, genFunc= genSchemeDe, func= func1,  data_size= 10, population_size= 100)
     

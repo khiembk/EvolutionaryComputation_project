@@ -390,7 +390,69 @@ class BenchmarkFunctions:
             return cf08(x, shift, rotate, weights[:5], biases[:5]) + 1400.0   
         else:
             raise ValueError("Function number not recognized!")
-
+        
+    def get_function(self, func_num):
+        weights = [10, 20, 30, 40, 50]  # Example weights
+        biases = [0, 100, 200, 300, 400]
+        
+        if func_num == 1:
+            return lambda x: sphere_func(x, self.OShift[0], self.M)
+        elif func_num == 2:
+            return lambda x: rastrigin_func(x, self.OShift[1], self.M)
+        elif func_num == 3:
+            return lambda x, shift=None, rotate=None: bent_cigar_func(x, shift, rotate) - 1200.0
+        elif func_num == 4:
+            return lambda x, shift=None, rotate=None: discus_func(x, shift, rotate) - 1100.0
+        elif func_num == 5:
+            return lambda x, shift=None, rotate=None: dif_powers_func(x, shift, rotate) - 1000.0
+        elif func_num == 6:
+            return lambda x, shift=None, rotate=None: rosenbrock_func(x, shift, rotate) - 900.0
+        elif func_num == 7:
+            return lambda x, shift=None, rotate=None: schaffer_F7_func(x, shift, rotate) - 800.0
+        elif func_num == 8:
+            return lambda x, shift=None, rotate=None: ackley_func(x, shift, rotate) - 700.0
+        elif func_num == 9:
+            return lambda x, shift=None, rotate=None: weierstrass_func(x, shift, rotate) - 600.0
+        elif func_num == 10:
+            return lambda x, shift=None, rotate=None: griewank_func(x, shift, rotate) - 500.0
+        elif func_num == 11:
+            return lambda x, shift=None, rotate=None: rastrigin_func(x, shift, rotate) - 400.0  
+        elif func_num == 12:
+            return lambda x, shift=None, rotate=None: rastrigin_func(x, shift, rotate) - 300.0
+        elif func_num == 13:
+            return lambda x, shift=None, rotate=None: step_rastrigin_func(x, shift, rotate) - 200.0
+        elif func_num == 14:
+            return lambda x, shift=None, rotate=None: schwefel_func(x, shift, rotate) - 100.0
+        elif func_num == 15:
+            return lambda x, shift=None, rotate=None: schwefel_func(x, shift, rotate) + 100.0
+        elif func_num == 16:
+            return lambda x, shift=None, rotate=None: katsuura_func(x, shift, rotate) + 200.0
+        elif func_num == 17:
+            return lambda x, shift=None, rotate=None: bi_rastrigin_func(x, shift, rotate, mu0=2.5, d=1.0) + 300.0
+        elif func_num == 18:
+            return lambda x, shift=None, rotate=None: bi_rastrigin_func(x, shift, rotate, mu0=2.5, d=1.0) + 400.0
+        elif func_num == 19:
+            return lambda x, shift=None, rotate=None: grie_rosen_func(x, shift, rotate) + 500.0
+        elif func_num == 20:
+            return lambda x, shift=None, rotate=None: escaffer6_func(x, shift, rotate) + 600.0
+        elif func_num == 21:
+            return lambda x, shift=None, rotate=None: cf01(x, shift, rotate, weights, biases) + 700.0
+        elif func_num == 22:
+            return lambda x, shift=None, rotate=None: cf02(x, shift, rotate, weights[:3], biases[:3]) + 800.0
+        elif func_num == 23:
+            return lambda x, shift=None, rotate=None: cf03(x, shift, rotate, weights[:3], biases[:3]) + 900.0
+        elif func_num == 24:
+            return lambda x, shift=None, rotate=None: cf04(x, shift, rotate, weights[:3], biases[:3]) + 1000.0
+        elif func_num == 25:
+            return lambda x, shift=None, rotate=None: cf05(x, shift, rotate, weights[:3], biases[:3]) + 1100.0
+        elif func_num == 26:
+            return lambda x, shift=None, rotate=None: cf06(x, shift, rotate, weights[:5], biases[:5]) + 1200.0
+        elif func_num == 27:
+            return lambda x, shift=None, rotate=None: cf07(x, shift, rotate, weights[:5], biases[:5]) + 1300.0
+        elif func_num == 28:
+            return lambda x, shift=None, rotate=None: cf08(x, shift, rotate, weights[:5], biases[:5]) + 1400.0
+        else:
+            raise ValueError("Function number not recognized!")
 def Test():
     dim = 10
     x = np.random.uniform(-100, 100, dim)
@@ -398,8 +460,9 @@ def Test():
 
     rotation = np.eye(dim)  # Replace with actual rotation matrix
     bench = BenchmarkFunctions(dimension=dim, shift_data=shift, rotation_matrices=rotation)
-
-    result = bench.test_func(x, 21, shift=shift, rotate=rotation)  # Case 21: CF01
+    func = bench.get_function(func_num=21)
+    result = func(x)
+    #result = bench.test_func(x, 21, shift=shift, rotate=rotation)  # Case 21: CF01
     print(f"Result for Case 21: {result}")
 
 if __name__ == "__main__":

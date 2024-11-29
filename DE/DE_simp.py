@@ -1,4 +1,5 @@
 import random
+from CEC2013 import BenchmarkFunctions
 def First_Dejong_func(data):
     data_size = len(data)
     sum = 0
@@ -103,19 +104,22 @@ def genneratePopulation(population_size = 10, data_size = 3):
     
     return population
 
-def main(population_size = 10, epochs = 10, data_size = 3, genFunc = genSchemeDe1):
+def main(population_size = 10, epochs = 10, data_size = 3, genFunc = genSchemeDe1, func = First_Dejong_func):
     population = genneratePopulation(population_size=population_size, data_size= data_size)
     
     for epoch in range(epochs):
 
         for index in range(population_size):
-            new_vec = genFunc(population= population, current_index= index)
+            new_vec = genFunc(population= population, current_index= index, func = func)
             if new_vec is not None :
                 population[index] = new_vec
 
         print("At epoch: ", epoch)
         for index in range(population_size):
-            print("population: ",population[index]," func_val:", First_Dejong_func(population[index]))
+            print("population: ",population[index]," func_val:", func(population[index]))
 
 if __name__ == "__main__":
-    main(epochs= 20, genFunc= genSchemeDe2)
+    ben = BenchmarkFunctions(dimension= 10)
+    func1 = ben.get_function(func_num = 1)
+
+    main(epochs= 100, genFunc= genSchemeDe2, func =  func1, population_size= 50, data_size= 10)
