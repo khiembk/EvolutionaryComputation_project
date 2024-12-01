@@ -26,22 +26,32 @@ def getBestsample(population,p = 0.2, func = First_Dejong_func):
 def genSchemeDe(population, archive_set, current_index,S_CR,S_F,mean_CR=0.5, mean_F=0.5, func =First_Dejong_func,p=0.2):
     CR =  random.normalvariate(mean_CR, 0.1)
     F =  np.random.standard_cauchy() * 0.1 + mean_F
+    if CR > 1 :
+        CR = 1
+    if CR < 0 :
+        CR = 0
+    
+    while F <=0 :
+        F =  np.random.standard_cauchy() * 0.1 + mean_F  
+    if F > 1 :
+        F = 1    
     size_po = len(population)
     if (current_index > size_po):
         return None  
     x_i = population[current_index]
-    rand_1, rand_2, rand_3 = choose_random_exclude_n0(size_po,current_index,3)
+    rand_1, rand_2 = choose_random_exclude_n0(size_po,current_index,num=2)
     x_r1 = population[rand_1]
     x_r2 = population[rand_2]
-    x_r3 = population[rand_3]
     if (len(archive_set)>0):
-        r_2 = random.randint(0, len(archive_set)-1)
-        x_r2 = archive_set[r_2]
+        archive_p = random.random()
+        if archive_p <= (len(archive_set)/(len(archive_set) + len(population))):
+           r_2 = random.randint(0, len(archive_set)-1)
+           x_r2 = archive_set[r_2]
     x_best = getBestsample(population= population, func= func,p = p)
     data_size = len(x_i)
     v_i = [None]*data_size
     for index in range(data_size):
-       v_i[index] = x_r1[index] + F*(x_r2[index] - x_r3[index]) + F*(x_best[index]- x_r1[index])
+       v_i[index] = x_i[index] + F*(x_r1[index] - x_r2[index]) + F*(x_best[index]- x_i[index])
     
     u_i = [None]*data_size
     for index in range(data_size):
@@ -66,10 +76,10 @@ def generateAvector(data_size, min_num = -5.12, max_num = 5.12):
 
     return new_vec
 
-def genneratePopulation(population_size = 10, data_size = 3, max_num = 5.12, min_num= -5.12):
+def genneratePopulation(population_size = 10, data_size = 3, max_num = None, min_num= None):
     population = []
     for index in range (population_size):
-        new_vec = generateAvector(data_size=data_size, min_num= min_num, max_num= max_num)
+        new_vec = generateAvector(data_size=data_size)
         population.append(new_vec)
     
     return population
@@ -87,7 +97,7 @@ def CheckInRange(num, max_num=1,min_num=0):
     if (num<0):
         return 0
     return num
-def JADE(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1, func = First_Dejong_func, min_num = -5.12, max_num = 5.12):
+def JADE(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR = 0.5, genFunc = genSchemeDe, c = 0.1, func = First_Dejong_func, min_num = None, max_num = None):
     population = genneratePopulation(population_size=population_size, data_size= data_size, max_num= max_num, min_num= min_num)
     archive_set = []
     for epoch in range(epochs):
@@ -98,8 +108,9 @@ def JADE(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR
             new_vec,S_CR,S_F = genFunc(population= population,archive_set = archive_set, current_index= index, S_CR = S_CR, S_F = S_F, mean_F = mean_F, mean_CR = mean_CR, func = func)
             if new_vec is not None :
                 x_i = population[index]
-                if func(new_vec) < func(population[index]):
+                if func(new_vec) <= func(x_i):
                     population[index] = new_vec
+                   
                     if (len(archive_set) < len(population)):
                         archive_set.append(x_i)
                     else : 
@@ -116,12 +127,13 @@ def JADE(population_size = 10, epochs = 10, data_size = 3, mean_F = 0.5, mean_CR
            mean_F = (1-c)*mean_F + c*meanLehmer(S_F)
            mean_F = CheckInRange(mean_F)
         print("At epoch: ", epoch)
-        print("current mean F: ", mean_F, "cureent main CR: ", mean_CR)
+        print("current mean F: ", mean_F, "current main CR: ", mean_CR)
         for index in range(population_size):
             print("population: ",population[index]," func_val:", func(population[index]))
-        x_best = getBestsample(population= population, p=0, func  = func)    
-        print("Best value: ", func(x_best))
-        return x_best 
+        
+    x_best = getBestsample(population= population, p=0, func  = func)    
+    print("Best value: ", func(x_best))
+    return x_best 
 
 if __name__ == "__main__":
     ben = BenchmarkFunctions(dimension= 10)
