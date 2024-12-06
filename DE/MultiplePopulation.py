@@ -182,6 +182,6 @@ def MixSHADE(population_size = 10, epochs = 10, data_size = 3,  c = 0.1, func = 
 
 if __name__ == "__main__":
     ben = BenchmarkFunctions(dimension= 10)
-    func1 = ben.get_function(func_num = 1)
+    func1 = ben.get_function(func_num = 2)
     MixSHADE(epochs= 100, func= func1, History_size= 50, data_size= 10, population_size= 50)
     
